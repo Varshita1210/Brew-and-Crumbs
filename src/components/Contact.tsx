@@ -66,8 +66,8 @@ export default function Contact() {
               <div className="contact-text-box">
                 <h4>Phone</h4>
                 <p>
-                  <a href="tel:+919876543210" className="hover-link">
-                    +91 98765 43210
+                  <a href="tel:+919441424667" className="hover-link">
+                    +91 94414 24667
                   </a>
                 </p>
               </div>

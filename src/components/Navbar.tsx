@@ -58,6 +58,7 @@ export default function Navbar({ onOpenFullMenu }: NavbarProps) {
     { label: "About", href: "#about" },
     { label: "Menu", href: "#menu" },
     { label: "Gallery", href: "#gallery" },
+    { label: "The Beginning", href: "#beginning" },
     { label: "Reviews", href: "#reviews" },
     { label: "Contact", href: "#contact" },
   ];

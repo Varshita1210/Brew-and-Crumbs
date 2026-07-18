@@ -9,6 +9,8 @@ interface FormErrors {
   guests?: string;
 }
 
+const WHATSAPP_NUMBER = "919441424667";
+
 export default function ReservationForm() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [revealed, setRevealed] = useState(false);
@@ -25,6 +27,13 @@ export default function ReservationForm() {
   // Validation errors states
   const [errors, setErrors] = useState<FormErrors>({});
   const [successModal, setSuccessModal] = useState(false);
+  const [lastReservationDetails, setLastReservationDetails] = useState<{
+    fullname: string;
+    phone: string;
+    date: string;
+    time: string;
+    guests: string;
+  } | null>(null);
 
   // Set today's date as min date constraint
   const [minDate, setMinDate] = useState("");
@@ -97,6 +106,15 @@ export default function ReservationForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
+      // Store inputs for WhatsApp redirect before clearing
+      setLastReservationDetails({
+        fullname,
+        phone,
+        date,
+        time,
+        guests,
+      });
+
       // Show checkmark success popup
       setSuccessModal(true);
       document.body.style.overflow = "hidden"; // lock page scroll
@@ -116,6 +134,44 @@ export default function ReservationForm() {
   const closeSuccessModal = () => {
     setSuccessModal(false);
     document.body.style.overflow = "visible"; // unlock page scroll
+  };
+
+  const handleWhatsAppRedirect = () => {
+    if (!lastReservationDetails) {
+      closeSuccessModal();
+      return;
+    }
+
+    const { fullname, phone, date, time, guests } = lastReservationDetails;
+
+    const message = `🍽️ *Table Reservation Request*
+
+Hello Brew & Crumbs Café!
+
+I would like to reserve a table.
+
+👤 Name:
+${fullname}
+
+📞 Phone:
+${phone}
+
+📅 Date:
+${date}
+
+🕒 Time:
+${time}
+
+👥 Guests:
+${guests}
+
+Thank you!
+Looking forward to visiting Brew & Crumbs Café.`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+    window.open(whatsappUrl, "_blank");
+    closeSuccessModal();
   };
 
   return (
@@ -331,9 +387,9 @@ export default function ReservationForm() {
             </p>
             <button
               className="btn btn-primary modal-success-dismiss-btn btn-ripple"
-              onClick={closeSuccessModal}
+              onClick={handleWhatsAppRedirect}
             >
-              Great!
+              Open WhatsApp
             </button>
           </div>
         </div>
